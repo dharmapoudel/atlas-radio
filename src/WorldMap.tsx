@@ -3,7 +3,7 @@
 // (derived from the Omarchy plugin's assets/countries.json, public domain).
 // Station dots are tappable; tapping a country browses its stations.
 
-import { useMemo } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import world from './world.json';
 import type { Station } from './types';
 
@@ -51,10 +51,53 @@ export default function WorldMap({ stations, playingUuid, isPaused, zoom, onPlay
     [stations]
   );
 
+  // drag-to-pan (pointer events on the svg)
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const drag = useRef<{ sx: number; sy: number; px: number; py: number } | null>(null);
+  const dragged = useRef(false);
+
+  const onPointerDown = (e: React.PointerEvent<SVGSVGElement>) => {
+    dragged.current = false;
+    drag.current = { sx: e.clientX, sy: e.clientY, px: pan.x, py: pan.y };
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* synthetic events */ }
+  };
+
+  const onPointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
+    const d = drag.current;
+    if (!d) return;
+    const dx = e.clientX - d.sx;
+    const dy = e.clientY - d.sy;
+    if (Math.abs(dx) + Math.abs(dy) > 8) dragged.current = true;
+    const limX = (W / 2) * zoom;
+    const limY = (H / 2) * zoom;
+    setPan({
+      x: Math.max(-limX, Math.min(limX, d.px + dx)),
+      y: Math.max(-limY, Math.min(limY, d.py + dy)),
+    });
+  };
+
+  const endDrag = () => { drag.current = null; };
+
+  // taps that end a drag must not trigger station/country clicks
+  const tapGuard = () => {
+    if (dragged.current) { dragged.current = false; return true; }
+    return false;
+  };
+
   return (
     <div className="relative h-full w-full overflow-hidden bg-screen">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-full w-full" role="img" aria-label="World map of stations">
-        <g transform={`translate(${W / 2} ${H / 2}) scale(${zoom}) translate(${-W / 2} ${-H / 2})`}>
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        className="h-full w-full cursor-grab active:cursor-grabbing"
+        style={{ touchAction: 'none' }}
+        role="img"
+        aria-label="World map of stations"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+      >
+        <g transform={`translate(${W / 2 + pan.x} ${H / 2 + pan.y}) scale(${zoom}) translate(${-W / 2} ${-H / 2})`}>
         {/* graticule */}
         {Array.from({ length: 11 }, (_, i) => (i + 1) * 30 - 180).map(lon => {
           const [x] = project(lon, 0);
@@ -72,7 +115,7 @@ export default function WorldMap({ stations, playingUuid, isPaused, zoom, onPlay
             d={d}
             className="fill-[#283039] stroke-[#7d8791]"
             strokeWidth={0.6}
-            onClick={() => { if (/^[A-Z]{2}$/.test(c)) onBrowseCountry(c, n); }}
+            onClick={() => { if (tapGuard()) return; if (/^[A-Z]{2}$/.test(c)) onBrowseCountry(c, n); }}
             style={{ cursor: /^[A-Z]{2}$/.test(c) ? 'pointer' : 'default' }}
           />
         ))}
@@ -82,7 +125,7 @@ export default function WorldMap({ stations, playingUuid, isPaused, zoom, onPlay
           const [x, y] = project(s.longitude as number, s.latitude as number);
           const isPlaying = playingUuid === s.uuid;
           return (
-            <g key={s.uuid} onClick={() => onPlayStation(s)} style={{ cursor: 'pointer' }}>
+            <g key={s.uuid} onClick={() => { if (tapGuard()) return; onPlayStation(s); }} style={{ cursor: 'pointer' }}>
               <circle cx={x} cy={y} r={10} fill="transparent" />
               <circle
                 cx={x}
@@ -102,7 +145,7 @@ export default function WorldMap({ stations, playingUuid, isPaused, zoom, onPlay
       </svg>
 
       <div className="pointer-events-none absolute bottom-2 left-4 font-mono text-hint text-dim">
-        Knob zooms · tap a dot to play · tap a country to browse · {dots.length} signals
+        Drag to pan · knob zooms · tap a dot to play · tap a country to browse · {dots.length} signals
       </div>
     </div>
   );
