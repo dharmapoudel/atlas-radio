@@ -9,7 +9,7 @@ Ported from the [Omarchy Radio Atlas plugin](https://github.com/AksharP5/omarchy
 ## Features
 
 - **World tab** — search stations by name, country, or genre; tune randomly; browse trending
-- **Map tab** — simplified world map (Natural Earth geometry) with live station signals plotted by coordinates; tap a dot to play, tap a country to browse its stations; **turn the knob to zoom**
+- **Map tab** — simplified world map (Natural Earth geometry) with live station signals plotted by coordinates; tap a dot to play, tap a country to browse its stations; **turn the knob to zoom, drag to pan**
 - **Countries tab** — browse stations by country
 - **Favorites tab** — your saved stations, persisted on-device
 - **Recent history** — quick access to recently played stations
@@ -28,6 +28,7 @@ Ported from the [Omarchy Radio Atlas plugin](https://github.com/AksharP5/omarchy
 | Esc | Stop playback |
 | Tap station / map dot | Play |
 | Tap country shape | Browse that country's stations |
+| Drag on the map | Pan the map |
 
 ## Screenshots
 
