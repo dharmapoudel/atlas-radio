@@ -1,5 +1,12 @@
 # Atlas Radio
 
+## 0.3.3
+
+- Map tab: drag to pan around the map (pointer drag, clamped to the map
+  bounds). Drags no longer trigger station/country taps by mistake.
+- Icon refined again: fully square, dark gradient tile with a brighter cyan
+  broadcast mark and subtle glow.
+
 ## 0.3.2
 
 - Map tab: the rotary knob now zooms the map (1×–4×) instead of changing
