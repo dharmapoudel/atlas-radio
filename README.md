@@ -33,13 +33,9 @@ Ported from the [Omarchy Radio Atlas plugin](https://github.com/AksharP5/omarchy
 
 Real device photos from a Car Thing install:
 
-| World tab | Map tab |
-|---|---|
-| ![World tab](screenshots/world-tab.jpg) | ![Map tab](screenshots/map-tab.jpg) |
-
-| Countries tab (playing) | Companion app (installed) |
-|---|---|
-| ![Countries tab](screenshots/countries-tab.jpg) | ![Companion app](screenshots/companion-app.jpg) |
+| World tab | Map tab | Countries tab (playing) |
+|---|---|---|
+| ![World tab](screenshots/world-tab.jpg) | ![Map tab](screenshots/map-tab.jpg) | ![Countries tab](screenshots/countries-tab.jpg) |
 
 ## Known limitation: audio output
 
