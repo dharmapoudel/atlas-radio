@@ -29,6 +29,18 @@ Ported from the [Omarchy Radio Atlas plugin](https://github.com/AksharP5/omarchy
 | Tap station / map dot | Play |
 | Tap country shape | Browse that country's stations |
 
+## Screenshots
+
+Real device photos from a Car Thing install:
+
+| World tab | Map tab |
+|---|---|
+| ![World tab](screenshots/world-tab.jpg) | ![Map tab](screenshots/map-tab.jpg) |
+
+| Countries tab (playing) | Companion app (installed) |
+|---|---|
+| ![Countries tab](screenshots/countries-tab.jpg) | ![Companion app](screenshots/companion-app.jpg) |
+
 ## Known limitation: audio output
 
 The Car Thing has **no speaker** — Spotify's own specs list Bluetooth SPP only (no audio profiles), and the on-device Chromium kiosk can't forward web audio to the phone. The app currently plays through an HTML `<audio>` element, which is silent on the device.
